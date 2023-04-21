@@ -1,4 +1,4 @@
-use std::{env, process, fs, io::{stdin, BufRead}};
+use std::{env, process, fs, io::{stdin, BufRead, stdout, Write}};
 use core::result::Result::Err;
 
 
@@ -34,28 +34,30 @@ fn main() {
 fn run_file(path: &str) {
     println!("running file...");
     // TODO: add error handling
-    run(fs::read_to_string(path).unwrap());
+    run(&fs::read_to_string(path).unwrap());
 }
 
 fn run_prompt() {
     // todo
     println!("running prompt...");
-    let mut line = String::new();
-    let mut lines = Vec::new();
-    let mut stream = stdin().lock();
-    while let Ok(n) = stream.read_line(&mut line) {
-        if n == 0 {
-            break;
-        }
-        lines.push(line);
-        line = String::new();
+    loop {
+        print!("> ");
+        stdout().flush().unwrap();
+        let mut line = String::new();
+        let mut stream = stdin().lock();
+        if let Ok(n) = stream.read_line(&mut line) {
+            if n == 0 {
+                println!("breaking");
+                break;
+            }
+        };
+        run(&line); // do we need to borrow?
     }
-    println!("{:#?}", lines);
 }
 
-fn run(source: String) {
+fn run(source: &str) {
     // todo
-    let scanner = Scanner::new(source);
-    println!("running");
+    let scanner = Scanner::new(source.to_string());
+    println!("running {}", source);
 }
 
