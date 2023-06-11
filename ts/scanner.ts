@@ -1,5 +1,6 @@
 import Token from "./token"
 import Lox from "./app";
+import TokenType from "./tokentype";
 
 class Scanner {
     private readonly source: string;
@@ -155,7 +156,7 @@ class Scanner {
     };
 
     private isDigit(c: string): boolean {
-        return c >= "0" && c <= '9';
+        return c >= "0" && c <= "9";
     };
 
     private isAtEnd(): boolean {
