@@ -1,0 +1,14 @@
+{
+  "name": "lox",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rahul D. Ghosal",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.3.0"
+  }
+}
