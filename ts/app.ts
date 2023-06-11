@@ -2,14 +2,6 @@ import * as fs from "fs";
 import * as readline from "readline";
 import Token from "./token";
 
-class Scanner {
-    private source: string;
-    constructor(source: string) { this.source = source.trim(); };
-    // TODO: change return to Token[]
-    public scanTokens(): string[] { return this.source.split(" "); };
-};
-
-
 class Lox {
     
     private static hadError: boolean = false;

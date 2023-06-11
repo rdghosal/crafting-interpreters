@@ -1,10 +1,10 @@
 class Token {
     private type: TokenType;
     private lexeme: string;
-    private literal: object;
+    private literal: object | null;
     private line: number;
 
-    constructor(type: TokenType, lexeme: string, literal: object,
+    constructor(type: TokenType, lexeme: string, literal: object | null,
                 line: number) {
         this.type = type;
         this.lexeme = lexeme;
