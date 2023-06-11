@@ -38,7 +38,6 @@ fn run_file(path: &str) {
 }
 
 fn run_prompt() {
-    // todo
     println!("running prompt...");
     loop {
         print!("> ");
@@ -51,13 +50,26 @@ fn run_prompt() {
                 break;
             }
         };
-        run(&line); // do we need to borrow?
+        if let Err(e) = run(&line) {
+            let has_error = true;
+        }
     }
 }
 
-fn run(source: &str) {
-    // todo
+fn run(source: &str) -> Result<(), &'static str> {
     let scanner = Scanner::new(source.to_string());
     println!("running {}", source);
+    Ok(())
 }
+
+fn error(line: u32, message: String) {
+    report(line, "".to_string(), message);
+}
+
+fn report(line: u32, where_: String, message: String) {
+    eprintln!(
+        "{}", format!("[line {line}] Error{where_}: {message}")
+    )
+}
+
 
