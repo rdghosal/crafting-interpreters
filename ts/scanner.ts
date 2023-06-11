@@ -77,8 +77,33 @@ class Scanner {
                 this.line++;
                 break;
             case '"': this.string(); break;
-            default: Lox.error(this.line, "Unexpected character."); break;
+            default:
+                if (this.isDigit(c)) {
+                    this.number();
+                } else {
+                    Lox.error(this.line, "Unexpected character.");
+                }
+                break;
         }
+    };
+
+    private number(): void {
+        while(this.isDigit(this.peek())) {
+            this.advance();
+        }
+        // Look for a fractional part.
+        if (this.peek() === "." && this.isDigit(this.peekNext())) {
+            // Consume the "."
+            this.advance();
+            while (this.isDigit(this.peek())) {
+                this.advance();
+            }
+        }
+        this.addToken(TokenType.NUMBER, parseFloat(
+                                            this.source.substring(
+                                                this.start,
+                                                this.current
+                                            )));
     };
 
     private string(): void {
@@ -100,7 +125,7 @@ class Scanner {
         const value: string = this.source.substring(this.start + 1,
                                                     this.current - 1);
         this.addToken(TokenType.STRING, value);
-    }
+    };
 
     private match(expected: string): boolean {
         // Advance only if there's a match.
@@ -112,14 +137,26 @@ class Scanner {
         }
         this.current++;
         return true;
-    }
+    };
 
     private peek(): string {
         if (this.isAtEnd()) {
             return "\0";
         }
         return this.source.charAt(this.current);
-    }
+    };
+
+    private peekNext(): string {
+        // One more than `peek`.
+        if (this.current + 1 >= this.source.length) {
+            return "\0";
+        }
+        return this.source.charAt(this.current + 1);
+    };
+
+    private isDigit(c: string): boolean {
+        return c >= "0" && c <= '9';
+    };
 
     private isAtEnd(): boolean {
         return this.current >= this.source.length;
