@@ -59,19 +59,44 @@ class Scanner {
                                 ? TokenType.GREATER_EQUAL 
                                 : TokenType.GREATER);
                 break;
+            case "/":
+                if (this.match("/")) {
+                    while (this.peek() !== "\n" && !this.isAtEnd()) {
+                        this.advance();
+                    }
+                } else {
+                    this.addToken(TokenType.SLASH);
+                }
+                break;
+            case " ":
+            case "\r":
+            case "\t":
+                // Ignore whitespace.
+                break;
+            case "\n":
+                this.line++;
+                break;
             default: Lox.error(this.line, "Unexpected character."); break;
         }
     };
 
     private match(expected: string): boolean {
+        // Advance only if there's a match.
         if (this.isAtEnd()) {
             return false;
         }
-        if (this.source.charAt(this.current) != expected) {
+        if (this.source.charAt(this.current) !== expected) {
             return false;
         }
         this.current++;
         return true;
+    }
+
+    private peek(): string {
+        if (this.isAtEnd()) {
+            return "\0";
+        }
+        return this.source.charAt(this.current);
     }
 
     private isAtEnd(): boolean {
