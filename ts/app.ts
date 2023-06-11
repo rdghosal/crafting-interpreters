@@ -1,6 +1,16 @@
 import * as fs from "fs";
 import * as readline from "readline";
 
+
+type Token = {};
+
+class Scanner {
+    private source: string;
+    constructor(source: string) { this.source = source.trim(); };
+    public scanTokens(): Token[] { return this.source.split(' '); };
+};
+
+
 class Lox {
     static main(args: string[]): void {
         if (args.length > 1)  {
@@ -34,12 +44,16 @@ class Lox {
         rl.setPrompt('> ');
         rl.prompt();
         rl.on('line', (line: string) => {
-            console.log(`received ${line}`);
+            Lox.run(line);
             rl.prompt();
         });
     };
 
-    static run(ch: string) { /* TODO */ }
+    static run(source: string): void {
+        const scanner = new Scanner(source);
+        const tokens = scanner.scanTokens();
+        tokens.forEach(t => console.log(t));
+    };
 };
 
 Lox.main([]);
