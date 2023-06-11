@@ -7,11 +7,14 @@ type Token = {};
 class Scanner {
     private source: string;
     constructor(source: string) { this.source = source.trim(); };
-    public scanTokens(): Token[] { return this.source.split(' '); };
+    public scanTokens(): Token[] { return this.source.split(" "); };
 };
 
 
 class Lox {
+    
+    private static hadError: boolean = false;
+
     static main(args: string[]): void {
         if (args.length > 1)  {
             console.log("Usage: jlox [script]");
@@ -41,10 +44,12 @@ class Lox {
             input: process.stdin,
             output: process.stdout,
         });
-        rl.setPrompt('> ');
+        rl.setPrompt("> ");
         rl.prompt();
-        rl.on('line', (line: string) => {
+        rl.on("line", (line: string) => {
             Lox.run(line);
+            // Reset error state in case user made an error.
+            Lox.hadError = false;
             rl.prompt();
         });
     };
@@ -53,6 +58,18 @@ class Lox {
         const scanner = new Scanner(source);
         const tokens = scanner.scanTokens();
         tokens.forEach(t => console.log(t));
+        if (Lox.hadError) {
+            process.exit(65);
+        }
+    };
+
+    static error(line: number, message: string): void {
+        Lox.report(line, "", message);
+    };
+
+    private static report(line: number, where: string, message: string): void {
+        console.error("[line ", line + "] Error" + where + ": " + message);
+        Lox.hadError = true;
     };
 };
 
