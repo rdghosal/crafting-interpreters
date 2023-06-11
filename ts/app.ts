@@ -1,9 +1,8 @@
 import * as fs from "fs";
 import * as readline from "readline";
-import Token from "./token";
+import Scanner from "./scanner";
 
 class Lox {
-    
     private static hadError: boolean = false;
 
     static main(args: string[]): void {
@@ -65,3 +64,5 @@ class Lox {
 };
 
 Lox.main([]);
+
+export default Lox;

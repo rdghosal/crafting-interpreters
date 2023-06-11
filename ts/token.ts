@@ -1,8 +1,8 @@
 class Token {
-    private type: TokenType;
-    private lexeme: string;
-    private literal: object | null;
-    private line: number;
+    private readonly type: TokenType;
+    private readonly lexeme: string;
+    private readonly literal: object | null;
+    private readonly line: number;
 
     constructor(type: TokenType, lexeme: string, literal: object | null,
                 line: number) {
