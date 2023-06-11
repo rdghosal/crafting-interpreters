@@ -1,13 +1,12 @@
 import * as fs from "fs";
 import * as readline from "readline";
-
-
-type Token = {};
+import Token from "./token";
 
 class Scanner {
     private source: string;
     constructor(source: string) { this.source = source.trim(); };
-    public scanTokens(): Token[] { return this.source.split(" "); };
+    // TODO: change return to Token[]
+    public scanTokens(): string[] { return this.source.split(" "); };
 };
 
 
