@@ -2,6 +2,25 @@ import Token from "./token"
 import Lox from "./app";
 import TokenType from "./tokentype";
 
+const Keywords = {
+    and: TokenType.AND,
+    class: TokenType.CLASS,
+    else: TokenType.ELSE,
+    false: TokenType.FALSE,
+    for: TokenType.FOR,
+    fun: TokenType.FUN,
+    if: TokenType.IF,
+    nil: TokenType.NIL,
+    or: TokenType.OR,
+    print: TokenType.PRINT,
+    return: TokenType.RETURN,
+    super: TokenType.SUPER,
+    this: TokenType.THIS,
+    true: TokenType.TRUE,
+    var: TokenType.VAR,
+    while: TokenType.WHILE,
+} as const;
+
 class Scanner {
     private readonly source: string;
     private readonly tokens: Token[] = [];
@@ -81,11 +100,25 @@ class Scanner {
             default:
                 if (this.isDigit(c)) {
                     this.number();
+                } else if (this.isAlpha(c)) {
+                    this.identifier();
                 } else {
                     Lox.error(this.line, "Unexpected character.");
                 }
                 break;
         }
+    };
+
+    private identifier(): void {
+        while (this.isAlphaNumeric(this.peek())) {
+            this.advance();
+        }
+        const text: string = this.source.substring(this.start, this.current);
+        let type: TokenType = Keywords[text as keyof typeof Keywords];
+        if (type === null) {
+            type = TokenType.IDENTIFIER;
+        }
+        this.addToken(type);
     };
 
     private number(): void {
@@ -153,6 +186,14 @@ class Scanner {
             return "\0";
         }
         return this.source.charAt(this.current + 1);
+    };
+
+    private isAlpha(c: string) {
+        return (c >= "a" && c <= "z") || (c >= "A" && c <= "Z") || c === "_";
+    };
+
+    private isAlphaNumeric(c: string) {
+        return this.isAlpha(c) || this.isDigit(c);
     };
 
     private isDigit(c: string): boolean {

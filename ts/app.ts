@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as readline from "readline";
-import Scanner from "./scanner";
+import { Scanner } from "./scanner";
 
 class Lox {
     private static hadError: boolean = false;
