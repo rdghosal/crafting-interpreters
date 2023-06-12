@@ -1,10 +1,12 @@
-class Token {
-    private readonly type: TokenType;
-    private readonly lexeme: string;
-    private readonly literal: object | null;
-    private readonly line: number;
+import TokenType from "./tokentype";
 
-    constructor(type: TokenType, lexeme: string, literal: object | null,
+class Token {
+    readonly type: TokenType;
+    readonly lexeme: string;
+    readonly literal: object | null;
+    readonly line: number;
+
+    constructor(type: TokenType, lexeme: string, literal: any | null,
                 line: number) {
         this.type = type;
         this.lexeme = lexeme;

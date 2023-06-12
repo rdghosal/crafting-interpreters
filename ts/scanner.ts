@@ -46,7 +46,7 @@ export class Scanner {
         return this.tokens;
     };
 
-    public scanToken(): void {
+    private scanToken(): void {
         const c: string = this.advance();
         switch (c) {
             case "(": this.addToken(TokenType.LEFT_PAREN); break;
