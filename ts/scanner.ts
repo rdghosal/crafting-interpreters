@@ -114,10 +114,9 @@ export class Scanner {
             this.advance();
         }
         const text: string = this.source.substring(this.start, this.current);
-        let type: TokenType = Keywords[text as keyof typeof Keywords];
-        if (type === null) {
-            type = TokenType.IDENTIFIER;
-        }
+        let type: TokenType = (text in Keywords)
+                                ? Keywords[text as keyof typeof Keywords]
+                                : TokenType.IDENTIFIER;
         this.addToken(type);
     };
 
