@@ -67,7 +67,6 @@ test("test Scanner().scanTokens() complete", function() {
 
     // 3. Assert
     scanned.forEach((s, i) => {
-        console.log(s)
         expect(s.type).toBe(tokens[i].type);
     });
 });
