@@ -2,7 +2,7 @@ import Token from "./token"
 import Lox from "./app";
 import TokenType from "./tokentype";
 
-const Keywords = {
+export const Keywords = {
     and: TokenType.AND,
     class: TokenType.CLASS,
     else: TokenType.ELSE,
@@ -21,7 +21,7 @@ const Keywords = {
     while: TokenType.WHILE,
 } as const;
 
-class Scanner {
+export class Scanner {
     private readonly source: string;
     private readonly tokens: Token[] = [];
 
