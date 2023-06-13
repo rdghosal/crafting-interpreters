@@ -63,6 +63,4 @@ class Lox {
     };
 };
 
-Lox.main([]);
-
 export default Lox;

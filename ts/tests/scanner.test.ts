@@ -1,6 +1,6 @@
-import Scanner from "../scanner";
-import Token from "../token";
-import TokenType from "../tokentype";
+import Scanner from "../src/scanner";
+import Token from "../src/token";
+import TokenType from "../src/tokentype";
 
 
 test("test Scanner().scanTokens()", function() {

@@ -1,5 +1,5 @@
 import Token from "./token"
-import Lox from "./app";
+import Lox from "./lox";
 import TokenType from "./tokentype";
 
 export const Keywords = {
