@@ -25,8 +25,7 @@ fn define_ast(output_dir: &str, base_name: &str, types: Vec<&str>) -> Result<()>
         Ok(mut f) => {
             f.write(format!(r"abstract class {} {{", base_name).as_bytes())?;
             types.iter().for_each(|t| {
-                let class_name: &str = str::trim(t.split(":").collect<&str>().0);
-
+                let class_name = str::trim(t.split(":").collect::<Vec<&str>>()[0]);
             });
             f.write(b"}")?;
         },
