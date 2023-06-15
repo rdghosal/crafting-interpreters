@@ -1,15 +1,17 @@
+import Token from './token';
+
 interface Visitor<R> {
-	visitBinaryExpr(expr: Binary): R;
-	visitGroupingExpr(expr: Grouping): R;
-	visitLiteralExpr(expr: Literal): R;
-	visitUnaryExpr(expr: Unary): R;
+	visitBinaryexpr(expr: Binary): R;
+	visitGroupingexpr(expr: Grouping): R;
+	visitLiteralexpr(expr: Literal): R;
+	visitUnaryexpr(expr: Unary): R;
 };
 
-abstract class Expr {
+abstract class expr {
 	abstract accept<R>(visitor: Visitor<R>): R;
 };
 
-class Binary extends Expr {
+class Binary extends expr {
 	public readonly left: Expr;
 	public readonly operator: Token;
 	public readonly right: Expr;
@@ -21,11 +23,11 @@ class Binary extends Expr {
 	}
 
 	accept<R>(visitor: Visitor<R>): R {
-		return visitor.visitBinaryExpr(this);
+		return visitor.visitBinaryexpr(this);
 	}
 };
 
-class Grouping extends Expr {
+class Grouping extends expr {
 	public readonly expression: Expr;
 	constructor(expression: Expr) {
 		super();
@@ -33,11 +35,11 @@ class Grouping extends Expr {
 	}
 
 	accept<R>(visitor: Visitor<R>): R {
-		return visitor.visitGroupingExpr(this);
+		return visitor.visitGroupingexpr(this);
 	}
 };
 
-class Literal extends Expr {
+class Literal extends expr {
 	public readonly value: any;
 	constructor(value: any) {
 		super();
@@ -45,11 +47,11 @@ class Literal extends Expr {
 	}
 
 	accept<R>(visitor: Visitor<R>): R {
-		return visitor.visitLiteralExpr(this);
+		return visitor.visitLiteralexpr(this);
 	}
 };
 
-class Unary extends Expr {
+class Unary extends expr {
 	public readonly operator: Token;
 	public readonly right: Expr;
 	constructor(operator: Token, right: Expr) {
@@ -59,7 +61,7 @@ class Unary extends Expr {
 	}
 
 	accept<R>(visitor: Visitor<R>): R {
-		return visitor.visitUnaryExpr(this);
+		return visitor.visitUnaryexpr(this);
 	}
 };
 

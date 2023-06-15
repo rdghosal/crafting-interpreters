@@ -14,7 +14,7 @@ fn main() {
     let output_dir: &str = &args[1];
     define_ast(
         output_dir,
-        "Expr",
+        "expr",
         &vec![
             "Binary   =  left: Expr, operator: Token, right: Expr",
             "Grouping =  expression: Expr",
@@ -29,6 +29,7 @@ fn define_ast(output_dir: &str, base_name: &str, types: &Vec<&str>) -> Result<()
     let path: String = format!("{}/{}.ts", output_dir, base_name);
     match File::create(path) {
         Ok(mut f) => {
+            f.write(b"import Token from './token';\n\n")?;
             define_visitor(&mut f, base_name, &types)?;
             f.write(format!("abstract class {} {{\n", base_name).as_bytes())?;
             // The base accept() method.
