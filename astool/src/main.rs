@@ -15,20 +15,24 @@ fn main() {
     define_ast(
         output_dir,
         "Expr",
-        vec![
+        &vec![
             "Binary   =  left: Expr, operator: Token, right: Expr",
             "Grouping =  expression: Expr",
             "Literal  =  value: any",
             "Unary    =  operator: Token, right: Expr",
         ],
-    ).expect("Failed to generate AST expressions");
+    )
+    .expect("Failed to generate AST expressions");
 }
 
-fn define_ast(output_dir: &str, base_name: &str, types: Vec<&str>) -> Result<()> {
+fn define_ast(output_dir: &str, base_name: &str, types: &Vec<&str>) -> Result<()> {
     let path: String = format!("{}/{}.ts", output_dir, base_name);
     match File::create(path) {
         Ok(mut f) => {
-            f.write(format!(r"abstract class {} {{", base_name).as_bytes())?;
+            define_visitor(&mut f, base_name, &types)?;
+            f.write(format!("abstract class {} {{\n", base_name).as_bytes())?;
+            // The base accept() method.
+            f.write(b"\tabstract accept<R>(visitor: Visitor<R>): R;\n")?;
             f.write(b"};\n\n")?;
             for t in types {
                 let substrs: Vec<&str> = t.split("=").collect();
@@ -39,6 +43,25 @@ fn define_ast(output_dir: &str, base_name: &str, types: Vec<&str>) -> Result<()>
         }
         Err(e) => panic!("{}", e),
     };
+    Ok(())
+}
+
+fn define_visitor(f: &mut File, base_name: &str, types: &Vec<&str>) -> Result<()> {
+    f.write(format!("interface Visitor<R> {{\n").as_bytes())?;
+    for type_ in types {
+        let type_name: &str = type_.split("=").collect::<Vec<&str>>()[0].trim();
+        f.write(
+            format!(
+                "\tvisit{}{}({}: {}): R;\n",
+                type_name,
+                base_name,
+                base_name.to_lowercase(),
+                type_name
+            )
+            .as_bytes(),
+        )?;
+    }
+    f.write(b"};\n\n")?;
     Ok(())
 }
 
@@ -59,6 +82,13 @@ fn define_type(f: &mut File, base_name: &str, class_name: &str, field_list: &str
         f.write(format!("\t\tthis.{} = {};\n", name, name).as_bytes())?;
     }
     f.write(b"\t}\n")?;
+
+    // Visitor pattern.
+    f.write(b"\n")?;
+    f.write(b"\taccept<R>(visitor: Visitor<R>): R {\n")?;
+    f.write(format!("\t\treturn visitor.visit{}{}(this);\n", class_name,  base_name).as_bytes())?;
+    f.write(b"\t}\n")?;
+
     f.write(b"};\n\n")?;
     Ok(())
 }
