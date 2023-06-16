@@ -1,17 +1,17 @@
 import Token from './token';
 
-interface Visitor<R> {
+export interface Visitor<R> {
 	visitBinaryExpr(expr: Binary): R;
 	visitGroupingExpr(expr: Grouping): R;
 	visitLiteralExpr(expr: Literal): R;
 	visitUnaryExpr(expr: Unary): R;
 };
 
-abstract class Expr {
+export abstract class Expr {
 	abstract accept<R>(visitor: Visitor<R>): R;
 };
 
-class Binary extends Expr {
+export class Binary extends Expr {
 	public readonly left: Expr;
 	public readonly operator: Token;
 	public readonly right: Expr;
@@ -27,7 +27,7 @@ class Binary extends Expr {
 	}
 };
 
-class Grouping extends Expr {
+export class Grouping extends Expr {
 	public readonly expression: Expr;
 	constructor(expression: Expr) {
 		super();
@@ -39,7 +39,7 @@ class Grouping extends Expr {
 	}
 };
 
-class Literal extends Expr {
+export class Literal extends Expr {
 	public readonly value: any;
 	constructor(value: any) {
 		super();
@@ -51,7 +51,7 @@ class Literal extends Expr {
 	}
 };
 
-class Unary extends Expr {
+export class Unary extends Expr {
 	public readonly operator: Token;
 	public readonly right: Expr;
 	constructor(operator: Token, right: Expr) {

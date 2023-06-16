@@ -14,7 +14,7 @@ fn main() {
     let output_dir: &str = &args[1];
     define_ast(
         output_dir,
-        "expr",
+        "Expr",
         &vec![
             "Binary   =  left: Expr, operator: Token, right: Expr",
             "Grouping =  expression: Expr",
@@ -26,12 +26,12 @@ fn main() {
 }
 
 fn define_ast(output_dir: &str, base_name: &str, types: &Vec<&str>) -> Result<()> {
-    let path: String = format!("{}/{}.ts", output_dir, base_name);
+    let path: String = format!("{}/{}.ts", output_dir, base_name.to_lowercase());
     match File::create(path) {
         Ok(mut f) => {
             f.write(b"import Token from './token';\n\n")?;
             define_visitor(&mut f, base_name, &types)?;
-            f.write(format!("abstract class {} {{\n", base_name).as_bytes())?;
+            f.write(format!("export abstract class {} {{\n", base_name).as_bytes())?;
             // The base accept() method.
             f.write(b"\tabstract accept<R>(visitor: Visitor<R>): R;\n")?;
             f.write(b"};\n\n")?;
@@ -48,7 +48,7 @@ fn define_ast(output_dir: &str, base_name: &str, types: &Vec<&str>) -> Result<()
 }
 
 fn define_visitor(f: &mut File, base_name: &str, types: &Vec<&str>) -> Result<()> {
-    f.write(format!("interface Visitor<R> {{\n").as_bytes())?;
+    f.write(format!("export interface Visitor<R> {{\n").as_bytes())?;
     for type_ in types {
         let type_name: &str = type_.split("=").collect::<Vec<&str>>()[0].trim();
         f.write(
@@ -67,7 +67,7 @@ fn define_visitor(f: &mut File, base_name: &str, types: &Vec<&str>) -> Result<()
 }
 
 fn define_type(f: &mut File, base_name: &str, class_name: &str, field_list: &str) -> Result<()> {
-    f.write(format!("class {} extends {} {{\n", class_name, base_name).as_bytes())?;
+    f.write(format!("export class {} extends {} {{\n", class_name, base_name).as_bytes())?;
 
     // Fields.
     let fields: Vec<&str> = field_list.split(", ").collect();
