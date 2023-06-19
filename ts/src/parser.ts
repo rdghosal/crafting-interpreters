@@ -37,7 +37,7 @@ export class Parser {
   }
 
   private equality(): Expr {
-    let expr = this.comaparison();
+    let expr = this.comparison();
     while (this.match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
       const operator: Token = this.previous();
       const right: Expr = this.comparison();
