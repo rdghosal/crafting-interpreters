@@ -1,6 +1,10 @@
 import * as fs from "fs";
 import * as readline from "readline";
 import { Scanner } from "./scanner";
+import Token from "./token";
+import TokenType from "./tokentype";
+
+type ErrorParam = number | Token; 
 
 class Lox {
     private static hadError: boolean = false;
@@ -53,8 +57,23 @@ class Lox {
         }
     };
 
-    static error(line: number, message: string): void {
+    // static error<T extends ErrorParam>(param: T, message: string): void {
+    //     const line = (typeof param === "number") ? param : param.line;
+    //     if (typeof param === 'number') {
+    //         Lox.report(line, "", message);
+    //     }
+    // };
+
+    static scanError(line: number, message: string): void {
         Lox.report(line, "", message);
+    };
+
+    static parseError(token: Token, message: string): void {
+        if (token.type === TokenType.EOF) {
+            Lox.report(token.line, " at end", message);
+        } else {
+            Lox.report(token.line, " at '" + token.lexeme + "'", message);
+        }
     };
 
     private static report(line: number, where: string, message: string): void {
