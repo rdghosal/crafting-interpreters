@@ -3,6 +3,8 @@ import * as readline from "readline";
 import { Scanner } from "./scanner";
 import Token from "./token";
 import TokenType from "./tokentype";
+import { Parser } from "./parser";
+import AstPrinter from "./astprinter";
 
 type ErrorParam = number | Token; 
 
@@ -51,9 +53,13 @@ class Lox {
     static run(source: string): void {
         const scanner = new Scanner(source);
         const tokens = scanner.scanTokens();
-        tokens.forEach(t => console.log(t));
-        if (Lox.hadError) {
-            process.exit(65);
+        const parser = new Parser(tokens);
+        const expression  = parser.parse();
+        if (this.hadError) {
+            return;
+        }
+        if (expression) {
+            console.log(new AstPrinter().print(expression));
         }
     };
 
