@@ -4,7 +4,7 @@ import Token from "./token";
 import TokenType from "./tokentype";
 
 /*
- * _Our expression grammer_
+ * _Our expression grammar_
  * expression     → equality ;
  * equality       → comparison ( ( "!=" | "==" ) comparison )* ;
  * comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
@@ -15,7 +15,7 @@ import TokenType from "./tokentype";
  * primary        → NUMBER | STRING | "true" | "false" | "nil"
                | "(" expression ")" ; 
  */
-export class Parser {
+export default class Parser {
   private readonly tokens: Token[];
   private current: number = 0;
 
