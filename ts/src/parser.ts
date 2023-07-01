@@ -15,7 +15,7 @@ import TokenType from "./tokentype";
  * primary        → NUMBER | STRING | "true" | "false" | "nil"
                | "(" expression ")" ; 
  */
-export default class Parser {
+export class Parser {
   private readonly tokens: Token[];
   private current: number = 0;
 
@@ -109,12 +109,12 @@ export default class Parser {
   }
 
   private match(...types: TokenType[]): boolean {
-    types.forEach((type) => {
+    for (const type of types) {
       if (this.check(type)) {
         this.advance();
         return true;
       }
-    });
+    }
     return false;
   }
 

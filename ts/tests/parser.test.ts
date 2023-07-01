@@ -1,11 +1,11 @@
-import Parser from "../src/parser";
+import { Parser } from "../src/parser";
 import Scanner from "../src/scanner";
 import Token from "../src/token";
 import TokenType from "../src/tokentype";
 
 test("test Parser().parse() complete", function () {
   // 1. Arrange
-  const source: string = `myVar = 5;`;
+  const source: string = `5 == 5;`;
   // var tokens = [
   //     new Token(TokenType.IDENTIFIER, "myVar", "myVar", 1),
   //     new Token(TokenType.EQUAL, "=", null, 1),
@@ -37,5 +37,5 @@ test("test Parser().parse() complete", function () {
   const parsed = new Parser(new Scanner(source).scanTokens()).parse();
 
   // 3. Assert
-  expect(parsed).toContain("accept");
+  expect(parsed).toHaveProperty("operator");
 });
