@@ -5,11 +5,13 @@ import Token from "./token";
 import TokenType from "./tokentype";
 import { Parser } from "./parser";
 import AstPrinter from "./astprinter";
-
-type ErrorParam = number | Token; 
+import RuntimeError from "./runtimeerror";
+import Interpreter from "./interpreter";
 
 class Lox {
+    private static readonly interpreter: Interpreter = new Interpreter();
     private static hadError: boolean = false;
+    private static hadRuntimeError: boolean = false;
 
     static main(args: string[]): void {
         if (args.length > 1)  {
@@ -30,6 +32,12 @@ class Lox {
                 data.forEach((byte: number) => { 
                     Lox.run(String.fromCharCode(byte)) 
                 });
+                if (Lox.hadError) {
+                    process.exit(65);
+                }
+                if (Lox.hadRuntimeError) {
+                    process.exit(70);
+                }
             }
         });
     };
@@ -55,12 +63,11 @@ class Lox {
         const tokens = scanner.scanTokens();
         const parser = new Parser(tokens);
         const expression  = parser.parse();
-        if (this.hadError) {
+        // Sotp if there was a syntax error.
+        if (this.hadError || expression === null) {
             return;
         }
-        if (expression) {
-            console.log(new AstPrinter().print(expression));
-        }
+        this.interpreter.intepret(expression);
     };
 
     // static error<T extends ErrorParam>(param: T, message: string): void {
@@ -81,6 +88,11 @@ class Lox {
             Lox.report(token.line, " at '" + token.lexeme + "'", message);
         }
     };
+
+    static runtimeError(error: RuntimeError): void {
+        console.error(error.message + "\n [line] " + error.token.line + "]");
+        Lox.hadRuntimeError = true;
+    }
 
     private static report(line: number, where: string, message: string): void {
         console.error("[line ", line + "] Error" + where + ": " + message);
